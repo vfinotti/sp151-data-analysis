@@ -3,7 +3,7 @@
 
 # # Importing data
 
-# In[1]:
+# In[21]:
 
 
 import pandas as pd
@@ -17,18 +17,29 @@ dataframe4 = pd.read_csv('sp15620171-semestre.csv', sep=';', encoding='latin1')
 dataframe5 = pd.read_csv('sp15620172-semestre.csv', sep=';', encoding='latin1')
 
 
-# In[2]:
+# In[22]:
 
 
 from IPython.core.display import display
-with pd.option_context('display.max_rows', 200, 'display.max_columns', 15, 
+with pd.option_context('display.max_rows', 50, 'display.max_columns', 15, 
                        'display.float_format', '{:.2f}'.format):
     display(dataframe0)
 
 
+# In[23]:
+
+
+print(dataframe0.columns.values)
+print(dataframe1.columns.values)
+print(dataframe2.columns.values)
+print(dataframe3.columns.values)
+print(dataframe4.columns.values)
+print(dataframe5.columns.values)
+
+
 # # Pre-procesing data
 
-# In[3]:
+# In[24]:
 
 
 import sys
@@ -48,18 +59,13 @@ def fix_subcity(df):
     return pd.DataFrame(df_val_res[:,0:11], columns = df.columns.values[0:11])
 
 
-# In[4]:
+# In[25]:
 
 
 dataframe0_fix = fix_subcity(dataframe0)
-dataframe1_fix = fix_subcity(dataframe1)
-dataframe2_fix = fix_subcity(dataframe2)
-dataframe3_fix = fix_subcity(dataframe3)
-dataframe4_fix = fix_subcity(dataframe4)
-dataframe5_fix = fix_subcity(dataframe5)
 
 
-# In[5]:
+# In[26]:
 
 
 display(dataframe0_fix)
@@ -67,7 +73,7 @@ display(dataframe0_fix)
 
 # # Saving data to Mongo DB
 
-# In[31]:
+# In[27]:
 
 
 from pymongo import MongoClient
@@ -94,18 +100,18 @@ def df2mongo(*args):
     return result
 
 
-# In[34]:
+# In[28]:
 
 
 result = df2mongo(dataframe0_fix,
-                  dataframe1_fix,
-                  dataframe2_fix,
-                  dataframe3_fix,
-                  dataframe4_fix,
-                  dataframe5_fix)
+                  dataframe1,
+                  dataframe2,
+                  dataframe3,
+                  dataframe4,
+                  dataframe5)
 
 
-# In[35]:
+# In[30]:
 
 
 len(result.inserted_ids)
