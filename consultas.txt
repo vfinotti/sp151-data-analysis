@@ -1,0 +1,145 @@
+############Conta os chamados por Prefeitura Regional ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Prefeitura Regional", total:{$sum:1}}},
+		{$sort:{"total": - 1}}
+	]
+)
+
+
+############Conta os chamados por Assunto em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Assunto", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os chamados por Tema em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Tema", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os chamados por Canal Atendimento em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Canal Atendimento", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os chamados por Orgão em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Órgão", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os chamados por Distrito em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Distrito", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os chamados por Status Solicitação em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:"$Status Solicitação", total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+
+
+
+############Conta os chamados por Status Solicitação por prefeitura em ordem decrescente############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Prefeitura Regional": "$Prefeitura Regional", "Status Solicitação":"$Status Solicitação"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+
+############Conta os Chamados por Assunto por Prefeitura Regional############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Prefeitura Regional": "$Prefeitura Regional", "Assunto":"$Assunto"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os Chamados por Tema por Prefeitura Regional############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Prefeitura Regional": "$Prefeitura Regional", "Tema":"$Tema"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+
+############Conta os Chamados por Assunto por Distrito############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Distrito": "$Distrito", "Assunto":"$Assunto"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os Chamados por Tema por Distrito############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Distrito": "$Distrito", "Tema":"$Tema"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+
+############Conta os Chamados por Órgão por Distrito############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Distrito": "$Distrito", "Órgão":"$Órgão"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
+
+############Conta os Chamados por Canal de Atendimento por Distrito############
+
+db.sp151.aggregate(
+	[
+		{$group: { _id:{"Distrito": "$Distrito", "Canal Atendimento":"$Canal Atendimento"}, total:{$sum:1}}},
+		{$sort:{"total": -1}}
+	]
+)
+
