@@ -3,21 +3,21 @@
 
 # # Importing data
 
-# In[21]:
+# In[38]:
 
 
 import pandas as pd
 import numpy as np
 
-dataframe0 = pd.read_csv('sp15620151-semestre.csv', sep=';', encoding='latin1')
-dataframe1 = pd.read_csv('sp15620152-semestre.csv', sep=';', encoding='latin1')
-dataframe2 = pd.read_csv('sp15620161-semestre.csv', sep=';', encoding='latin1')
-dataframe3 = pd.read_csv('sp15620162-semestre.csv', sep=';', encoding='latin1')
-dataframe4 = pd.read_csv('sp15620171-semestre.csv', sep=';', encoding='latin1')
-dataframe5 = pd.read_csv('sp15620172-semestre.csv', sep=';', encoding='latin1')
+dataframe0 = pd.read_csv('sp15620151-semestre.csv', sep=';', encoding='latin1', low_memory=False)
+dataframe1 = pd.read_csv('sp15620152-semestre.csv', sep=';', encoding='latin1', low_memory=False)
+dataframe2 = pd.read_csv('sp15620161-semestre.csv', sep=';', encoding='latin1', low_memory=False)
+dataframe3 = pd.read_csv('sp15620162-semestre.csv', sep=';', encoding='latin1', low_memory=False)
+dataframe4 = pd.read_csv('sp15620171-semestre.csv', sep=';', encoding='latin1', low_memory=False)
+dataframe5 = pd.read_csv('sp15620172-semestre.csv', sep=';', encoding='latin1', low_memory=False)
 
 
-# In[22]:
+# In[39]:
 
 
 from IPython.core.display import display
@@ -26,7 +26,7 @@ with pd.option_context('display.max_rows', 50, 'display.max_columns', 15,
     display(dataframe0)
 
 
-# In[23]:
+# In[40]:
 
 
 print(dataframe0.columns.values)
@@ -35,11 +35,12 @@ print(dataframe2.columns.values)
 print(dataframe3.columns.values)
 print(dataframe4.columns.values)
 print(dataframe5.columns.values)
+print(type(dataframe0.iloc[0,11]))
 
 
 # # Pre-procesing data
 
-# In[24]:
+# In[41]:
 
 
 import sys
@@ -59,21 +60,42 @@ def fix_subcity(df):
     return pd.DataFrame(df_val_res[:,0:11], columns = df.columns.values[0:11])
 
 
-# In[25]:
+# In[42]:
 
 
 dataframe0_fix = fix_subcity(dataframe0)
 
 
-# In[26]:
+# In[43]:
 
 
 display(dataframe0_fix)
 
 
+# In[44]:
+
+
+dataframe0_fix['Data Abertura'] = pd.to_datetime(dataframe0_fix['Data Abertura'], format='%d/%m/%Y', infer_datetime_format = True)
+
+dataframe1['Data Abertura'] = pd.to_datetime(dataframe1['Data Abertura'], format='%d/%m/%Y')
+dataframe1['Data Parecer'] = pd.to_datetime(dataframe1['Data Parecer'], format='%d/%m/%Y')
+
+dataframe2['Data Abertura'] = pd.to_datetime(dataframe2['Data Abertura'], format='%d/%m/%Y')
+dataframe2['Data Parecer'] = pd.to_datetime(dataframe2['Data Parecer'], format='%d/%m/%Y')
+
+dataframe3['Data Abertura'] = pd.to_datetime(dataframe3['Data Abertura'], format='%d/%m/%Y')
+dataframe3['Data Parecer'] = pd.to_datetime(dataframe3['Data Parecer'], format='%d/%m/%Y')
+
+dataframe4['Data Abertura'] = pd.to_datetime(dataframe4['Data Abertura'], format='%d/%m/%Y')
+dataframe4['Data Parecer'] = pd.to_datetime(dataframe4['Data Parecer'], format='%d/%m/%Y')
+
+dataframe5['Data Abertura'] = pd.to_datetime(dataframe5['Data Abertura'], format='%d/%m/%Y')
+dataframe5['Data Parecer'] = pd.to_datetime(dataframe5['Data Parecer'], format='%d/%m/%Y')
+
+
 # # Saving data to Mongo DB
 
-# In[27]:
+# In[ ]:
 
 
 from pymongo import MongoClient
@@ -100,7 +122,7 @@ def df2mongo(*args):
     return result
 
 
-# In[28]:
+# In[ ]:
 
 
 result = df2mongo(dataframe0_fix,
@@ -111,8 +133,36 @@ result = df2mongo(dataframe0_fix,
                   dataframe5)
 
 
-# In[30]:
+# In[ ]:
 
 
 len(result.inserted_ids)
+
+
+# # Saving data to SQLite
+
+# Including 'Canal Atendimento' column to < 2017 datasets to assure SQL compatibility
+
+# In[ ]:
+
+
+dataframe0_fix['Canal Atendimento'] = float('nan')
+dataframe1['Canal Atendimento'] = float('nan')
+dataframe2['Canal Atendimento'] = float('nan')
+dataframe3['Canal Atendimento'] = float('nan')
+
+
+# In[ ]:
+
+
+import sqlite3
+
+conn = sqlite3.connect("sp156.db")
+
+dataframe0_fix.to_sql("sp156", conn, if_exists="replace")
+dataframe1.to_sql("sp156", conn, if_exists="append")
+dataframe2.to_sql("sp156", conn, if_exists="append")
+dataframe3.to_sql("sp156", conn, if_exists="append")
+dataframe4.to_sql("sp156", conn, if_exists="append")
+dataframe5.to_sql("sp156", conn, if_exists="append")
 
